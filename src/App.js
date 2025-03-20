@@ -6,7 +6,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Navigation from './components/Navigation';
 
 // Pages
-import Login from './components/Auth/Login';
+import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Dashboard from './components/dashboard/Dashboard';
 import JobForm from './components/jobs/JobForm';
