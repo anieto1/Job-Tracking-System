@@ -1,0 +1,51 @@
+**this is what was implemented in regards to JWT authentication**
+
+1. Overall structure: WE implemented a jwt authentication system with the following components
+
+auth/
+├── controller/
+│   └── AuthController.java         # Handles login endpoints
+├── dto/
+│   └── LoginRequest.java          # Data transfer object for login requests
+└── security/
+    ├── JwtUtils.java              # JWT token operations
+    ├── JwtAuthenticationFilter.java # JWT token validation filter
+    └── SecurityConfig.java        # Spring Security configuration
+
+2. Components-by-component:
+
+A. LoginRequest(DTO)
+public class LoginRequest {
+    private String username;
+    private String password;
+    // getters and setters
+}
+- Purpose: a simple data transfer object that holds the username and password
+from the login request.
+
+- Why: seperates the API contract from internal implementation details.
+
+- Usage: used in logic endpoint to receive login credentials.
+
+B. JwtUtils(Utility Class)
+
+@Component
+public class JwtUtils {
+    @Value("${jwt.secret}")
+    private String secret;
+    
+    @Value("${jwt.expiration}")
+    private Long expiration;
+    
+    // Methods for token operations
+}
+-Purpose: handles all JWT token operations.
+-Key functions:
+    - generateToken(UserDetails userDetails): generates a JWT token for a user
+    - validateToken(String token, UserDetails userDetails): validates a JWT token
+    - extractUsername(String token): extracts the username from a JWT token
+    - extractExpiration(String token): extracts the expiration date from a JWT token
+
+- Why: centralizes JWT operations and provides a secure way to handle tokens.
+
+

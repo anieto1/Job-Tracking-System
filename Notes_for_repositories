@@ -1,6 +1,6 @@
-As im going through this project, Im going to be making
+**As im going through this project, Im going to be making
 note of all the things im doing, especially the 
-stuff i havent done before
+stuff i havent done before**
 
 
 UserRepository(repositories in general):
@@ -40,3 +40,5 @@ In this instance of "UserRepository.java", by extending JpaRepository, the inter
 - update user info
 - delete user info
 All without having to write sql
+
+

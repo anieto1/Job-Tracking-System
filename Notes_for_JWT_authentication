@@ -1,0 +1,183 @@
+**What is JWT Authentication?**
+
+JWT(JSON web token) is a compact, URL-safe measn of representing claims between two parties.
+It's commonly used for:
+- Authentication
+- Information Exchange
+- Authorization
+
+A JWT consists of three parts
+- Header:Contains the type of token and signing algorithm
+- Payload:Contains the claims(suer data)
+- Signiture: Verifies the token hasn't been tampered with
+
+Implementation Guide:
+**1. Install npm jsonwebtoken express bcryptjs**
+**2.create the authentication middelware:**
+
+    const jwt = require('jsonwebtoken');
+
+const auth = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization').replace('Bearer ', '');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Add user data to request
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Please authenticate' });
+  }
+};
+
+module.exports = auth;
+
+**3. create login route:**
+    const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const router = express.Router();
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Find user in database (assuming you have a User model)
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+module.exports = router;
+
+**4.Set up protected routes:**
+
+ const express = require('express');
+const auth = require('../middleware/auth');
+const router = express.Router();
+
+// Protected route - requires authentication
+router.get('/profile', auth, async (req, res) => {
+  try {
+    // req.user contains the decoded token payload
+    const userId = req.user.userId;
+    
+    // Fetch user data from database
+    const user = await User.findById(userId);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+module.exports = router;
+
+**5. Set up your environment variables**
+**in a .env file**
+ JWT_SECRET=your_jwt_secret_key_here
+
+ 6.Use the routes in the main front end app:
+ const express = require('express');
+const authRoutes = require('./routes/auth');
+const protectedRoutes = require('./routes/protected');
+
+const app = express();
+
+app.use(express.json());
+app.use('/auth', authRoutes);
+app.use('/api', protectedRoutes);
+
+**HOW TO USE**
+**1.** User login through the /auth/login endpoint with email and password
+**2.** Server validates credentials and returns a JWT token
+**3.** Client stores the token(usually in localStorage or cookies)
+**4.** For subsequent requests to protected routes, client includes the token in the Authorization header:
+    fetch('/api/profile', {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+
+***Security Best Practices***
+**1.** Always use HTTPS in production
+**2.** Store JWT_SECRET securely and make it complex
+**3.** Set appropriate token experation
+**4.** Never store sensitive info in JWT payload
+**5.** implement token refresh mechanism for better security
+**6.** Use secure password hashing(bcrypt)
+
+
+***Frontend implementation Example(react)***
+/**
+ * Login function that handles user authentication
+ * @param {string} email - User's email address
+ * @param {string} password - User's password
+ * @returns {Promise<boolean>} Success/failure of login attempt
+ */
+const login = async (email, password) => {
+  try {
+    /* Make POST request to login endpoint */
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+    
+    /* Parse the response data */
+    const data = await response.json();
+    
+    if (data.token) {
+      /* Store token in localStorage if login successful */
+      localStorage.setItem('token', data.token);
+      return true;
+    }
+  } catch (error) {
+    /* Handle any errors during login */
+    console.error('Login failed:', error);
+    return false;
+  }
+};
+
+/**
+ * Helper function to make authenticated API requests
+ * @param {string} url - The URL to make the request to
+ * @returns {Promise<any>} Parsed response data
+ */
+const authenticatedRequest = async (url) => {
+  /* Retrieve the stored JWT token */
+  const token = localStorage.getItem('token');
+  
+  try {
+    /* Make authenticated request with token */
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return await response.json();
+  } catch (error) {
+    /* Handle any request errors */
+    console.error('Request failed:', error);
+  }
+};

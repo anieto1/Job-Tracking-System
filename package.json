@@ -1,53 +1,20 @@
 {
-  "name": "job-tracking-system",
-  "version": "0.1.0",
+  "$schema": "node_modules/@types/node/package.json",
+  "name": "job-tracking-system-workspace",
+  "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "aws-sdk": "^2.1350.0",
-    "axios": "^1.3.5",
-    "formik": "^2.2.9",
-    "mysql": "^2.18.1",
-    "pg": "^8.11.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.10.0",
-    "react-scripts": "5.0.1",
-    "reflect-metadata": "^0.2.1",
-    "styled-components": "^5.3.9",
-    "typeorm": "^0.2.45",
-    "web-vitals": "^2.1.4",
-    "yup": "^1.0.2"
-  },
+  "workspaces": [
+    "job-tracking-system/frontend"
+  ],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "frontend": "cd job-tracking-system/frontend && npm start",
+    "frontend:build": "cd job-tracking-system/frontend && npm run build",
+    "backend": "cd job-tracking-system && ./mvnw spring-boot:run",
+    "backend:build": "cd job-tracking-system && ./mvnw clean package",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\""
   },
   "devDependencies": {
-    "@types/node": "^20.11.30",
-    "ts-node": "^10.9.2",
-    "typescript": "^4.9.5"
+    "@types/node": "^22.13.13",
+    "concurrently": "^8.2.2"
   }
 }

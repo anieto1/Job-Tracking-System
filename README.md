@@ -1,6 +1,8 @@
-y# Job Tracking System
+# Job Tracking System
 
-A modern web application to help job seekers track their job applications, manage resumes, and receive follow-up reminders.
+This is a full-stack job tracking application with:
+- React frontend
+- Spring Boot backend
 
 ## Features
 
@@ -13,61 +15,72 @@ A modern web application to help job seekers track their job applications, manag
 ## Tech Stack
 
 - **Frontend**: React.js
-- **Backend**: To be implemented (placeholder for API integration)
+- **Backend**: Spring Boot
 - **Storage**: AWS S3 for resume storage
 - **Notifications**: AWS SES for email reminders
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js and npm installed
-
-### Installation
-
-1. Clone the repository
-```
-git clone https://github.com/yourusername/job-tracking-system.git
-cd job-tracking-system
-```
-
-2. Install dependencies
-```
-npm install
-```
-
-3. Start the development server
-```
-npm start
-```
-
-4. Open your browser and visit `http://localhost:3000`
 
 ## Project Structure
 
 ```
-src/
-  ├── components/         # React components
-  │   ├── Auth/           # Authentication components
-  │   ├── Dashboard/      # Dashboard components
-  │   ├── Jobs/           # Job-related components
-  │   └── Resume/         # Resume-related components
-  ├── contexts/           # React contexts for state management
-  ├── styles/             # CSS styles
-  ├── App.js              # Main App component
-  └── index.js            # Entry point
+job-tracking-system/
+├── package.json                # Workspace manager
+├── job-tracking-system/        # Main project directory
+│   ├── frontend/               # React frontend
+│   │   ├── package.json        # Frontend dependencies
+│   │   ├── tsconfig.json       # TypeScript config
+│   │   ├── src/                # Frontend source code
+│   │   └── public/             # Static files
+│   ├── backend/                # Spring Boot backend
+│   │   └── src/                # Backend source code
+│   └── pom.xml                 # Maven configuration
 ```
 
-## Backend Implementation (Future)
+## Getting Started
 
-The current implementation uses mock data stored in localStorage. For a production environment, you would need to implement:
+### Install dependencies
 
-1. A backend API (using Node.js/Express, Django, Rails, etc.)
-2. Database integration (MongoDB, PostgreSQL, etc.)
-3. AWS S3 integration for resume storage
-4. AWS SES integration for email notifications
+```bash
+# Install workspace and frontend dependencies
+npm install
+```
+
+### Run the application
+
+```bash
+# Run frontend only
+npm run frontend
+
+# Run backend only
+npm run backend
+
+# Run both frontend and backend
+npm run dev
+```
+
+### Build for production
+
+```bash
+# Build frontend
+npm run frontend:build
+
+# Build backend
+npm run backend:build
+```
+
+## Backend
+
+The backend is a Spring Boot application using:
+- Spring Data JPA for data access
+- REST APIs for communication with frontend
+
+## Frontend
+
+The frontend is a React application using:
+- TypeScript
+- React Router for navigation
+- Axios for API calls
+- Formik and Yup for form handling
 
 ## License
 
 MIT 
->>>>>>> 21b2209 (Front end template setup)
