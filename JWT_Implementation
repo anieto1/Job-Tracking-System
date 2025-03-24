@@ -48,4 +48,113 @@ public class JwtUtils {
 
 - Why: centralizes JWT operations and provides a secure way to handle tokens.
 
+C. JwtAuthenticationFilter(Filter)
 
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, 
+                                  HttpServletResponse response, 
+                                  FilterChain filterChain) {
+        // Token validation logic
+    }
+}
+-Purpose: intercepts each request to validate JWT tokens and set up authentication.
+-Key functions:
+    - doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain):
+    validates JWT tokens and sets up authentication.
+
+- Why: ensures that only authenticated requests are processed.
+
+D. SecurityConfig(Configuration)
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        // Security configuration
+    }
+}
+-Purpose: configures Spring Security settings.
+-Key functions:
+    - securityFilterChain(HttpSecurity http): configures the security filter chain.
+    - Disable CSRF protection
+    - configures public endpoints and authentication requirements
+    - sets up stateless session management
+    - configures password encoder
+
+- Why: ensures that the security configuration is applied correctly.
+
+E. AuthenticationProvider(Interface)
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        // Login logic
+    }
+}
+-Purpose: handles the login logic.
+-Key functions:
+    - login(LoginRequest loginRequest): handles the login logic.
+
+- Why: ensures that the login logic is implemented correctly.
+
+
+3. Authentication flow
+
+    1. Login process
+       Client → POST /api/auth/login
+   → AuthController validates credentials
+   → JwtUtils generates token
+   → Client receives token
+
+    2. process request flow
+     Client → Request with Bearer token
+      → JwtAuthenticationFilter intercepts
+      → Validates token
+     → Sets up SecurityContext
+     → Request proceeds to endpoint
+
+4.Security Features
+
+    1.Token based authentication:
+    - stateless(no-server side session storage)
+    - Scalable across multiple servers 
+    - Secure token validation
+    2. Password security 
+    - BCrypt password hashing
+    - Secure password storage
+    - Protection against rainbow table attacks
+    3. Endpoint protection
+    - Public endpoints for authentication
+    - Protected endpoints required valid JWT
+    - CSRF protection disabled(not needed for JWT)
+
+5. Configuration requirements
+add these properties to application.properties
+jwt.secret=your_secure_secret_key
+jwt.expiration=86400  # 24 hours in seconds
+
+6. Usage examples
+
+    1. Login
+        POST /api/auth/login
+Content-Type: application/json
+
+{
+    "username": "user",
+    "password": "password"
+}
+
+    2. Protected request
+     GET /api/protected-endpoint
+Authorization: Bearer <jwt_token>
+
+This implementation provides a secure, scalable authentication system that:
+Is stateless and suitable for microservices
+Provides secure token-based authentication
+Is easy to integrate with frontend applications
+Follows Spring Security best practices
+Is well-documented and maintainable
