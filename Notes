@@ -1,0 +1,42 @@
+As im going through this project, Im going to be making
+note of all the things im doing, especially the 
+stuff i havent done before
+
+
+UserRepository(repositories in general):
+
+UserRepository is an interface that:
+- Extends Spring Data JPA's for the User entity type with Long 
+as the ID type
+
+- Defines a custom method "findByEmail(String email)" that returns an Optional<User>-allowing
+the application to look up users by their email address
+
+Whats the purpose of a Repository?
+
+In spring applications( and software architecture in general), a Repository:
+
+-Abstraction Layer: Act as an abstraction over the data storage(a database usually)
+
+- Data Access: Provides methods to perform crud operations on entities
+
+- Query Methods: Allows defining custom query methods using a naming convetion(ex: findByEmail)
+
+- NoSQL Needed: Spring Data JPA auto implements the methods based on naming conventions, so you don't need to write sql
+
+- Domain Driven Design: Implements the repository pattern from DDD, seperating business logic from data access logic
+
+In this instance of "UserRepository.java", by extending JpaRepository, the interface automatically gets methods like:
+ - save(entity)
+ - findById(Long id)
+ - findAll()
+ - delete(User entity)
+
+ Thnk of it like a helper that talks to your database for you. The middleman between your application and where your user data is stored
+
+ in the user repo, it lets you:
+-Save new users
+- find existing users
+- update user info
+- delete user info
+All without having to write sql
