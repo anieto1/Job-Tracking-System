@@ -6,6 +6,8 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -21,7 +23,7 @@ function Register() {
     try {
       setError('');
       setLoading(true);
-      await register(email, password);
+      await register(email, password, firstName, lastName);
       navigate('/dashboard');
     } catch (err) {
       setError('Failed to create an account');
@@ -36,6 +38,26 @@ function Register() {
         <h2 className="form-title">Register</h2>
         {error && <div className="form-error">{error}</div>}
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">First Name</label>
+            <input
+              type="text"
+              className="form-input"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Last Name</label>
+            <input
+              type="text"
+              className="form-input"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
           <div className="form-group">
             <label className="form-label">Email</label>
             <input
